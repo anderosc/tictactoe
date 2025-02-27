@@ -9,17 +9,8 @@ function Game() {
     updatePlayerStats
   } = useContext(GameContext);
 
-  const initialBoard = [];
-  for (let i = 0; i < 9; i++) {
-    initialBoard.push({
-      id: i,
-      red: false,
-      blue: false,
-      className: "",
-    });
-  }
 
-  const [board, setBoard] = useState(initialBoard);
+  const [board, setBoard] = useState([]);
   const [isRedTurn, setIsRedTurn] = useState(true);
   const [doRedStartsGame, setDoRedStartsGame] = useState(true);
   const [winner, setWinner] = useState(null);
@@ -27,7 +18,25 @@ function Game() {
 
   const [scoreRed, setScoreRed] = useState(0);
   const [scoreBlue, setScoreBlue] = useState(0);
-  const [draws, setDraws] = useState(0);
+  const [draws, setDraws] = useState(0)
+
+  
+
+  useEffect(() => {
+    const initialBoard = [];
+    for (let i = 0; i < 9; i++) {
+      initialBoard.push({
+        id: i,
+        red: false,
+        blue: false,
+        className: "",
+      });
+    }
+    setBoard(initialBoard)
+    console.log(initialBoard)
+  }, [ doRedStartsGame]);
+
+
 
   useEffect(() => {
     if (lastWinner === players.player1) {
@@ -38,7 +47,9 @@ function Game() {
   }, [lastWinner, players]);
 
   const handleClick = (id) => {
-    if (winner) return;
+    if (winner){
+      return;
+    } 
 
     const newBoard = [...board];
     const cell = newBoard[id];
@@ -68,7 +79,7 @@ function Game() {
     const combination7 = [0, 4, 8];
     const combination8 = [2, 4, 6];
 
-    const allCombinations = [
+    const allComb = [
       combination1,
       combination2,
       combination3,
@@ -79,8 +90,8 @@ function Game() {
       combination8,
     ];
 
-    for (let i = 0; i < allCombinations.length; i++) {
-      const combination = allCombinations[i];
+    for (let i = 0; i < allComb.length; i++) {
+      const combination = allComb[i];
       const a = combination[0];
       const b = combination[1];
       const c = combination[2];
@@ -110,7 +121,7 @@ function Game() {
   const resetGame = () => {
     updatePlayerStats(players.player1, players.player2, scoreRed, scoreBlue, lastWinner);
 
-    setBoard(initialBoard);
+    
     setDoRedStartsGame(!doRedStartsGame); 
     setIsRedTurn(doRedStartsGame);
     setWinner(null);
